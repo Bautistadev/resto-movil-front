@@ -19,6 +19,7 @@ public class OcupacionDTO {
         this.detallePlato = detallePlato;
         this.detalleBebida = detalleBebida;
         this.mesa = mesa;
+        this.id = id;
     }
 
     public OcupacionDTO() {
@@ -67,7 +68,8 @@ public class OcupacionDTO {
     @Override
     public String toString() {
         return "OcupacionDTO{" +
-                "inicio=" + inicio +
+                "id=" + id +
+                ", inicio=" + inicio +
                 ", fin=" + fin +
                 ", detallePlato=" + detallePlato +
                 ", detalleBebida=" + detalleBebida +

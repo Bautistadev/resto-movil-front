@@ -2,20 +2,20 @@ package com.example.resto.EntityDTO;
 
 public class DetallePlatoRequestDTO {
     private Integer cantidad;
-    private Long idPorcion;
-    private Long idPlato;
-    private Long idOcupacion;
+    private Porcion porcion;
+    private PlatoDTO plato;
+    private OcupacionDTO ocupacion;
 
-    public DetallePlatoRequestDTO( Integer cantidad, Long idPorcion, Long idPlato, Long idOcupacion) {
+    public DetallePlatoRequestDTO(Integer cantidad, Porcion porcion, PlatoDTO plato, OcupacionDTO ocupacion) {
+
         this.cantidad = cantidad;
-        this.idPorcion = idPorcion;
-        this.idPlato = idPlato;
-        this.idOcupacion = idOcupacion;
+        this.porcion = porcion;
+        this.plato = plato;
+        this.ocupacion = ocupacion;
     }
 
     public DetallePlatoRequestDTO() {
     }
-
 
     public Integer getCantidad() {
         return cantidad;
@@ -25,37 +25,37 @@ public class DetallePlatoRequestDTO {
         this.cantidad = cantidad;
     }
 
-    public Long getIdPorcion() {
-        return idPorcion;
+    public Porcion getPorcion() {
+        return porcion;
     }
 
-    public void setIdPorcion(Long idPorcion) {
-        this.idPorcion = idPorcion;
+    public void setPorcion(Porcion porcion) {
+        this.porcion = porcion;
     }
 
-    public Long getIdPlato() {
-        return idPlato;
+    public PlatoDTO getPlato() {
+        return plato;
     }
 
-    public void setIdPlato(Long idPlato) {
-        this.idPlato = idPlato;
+    public void setIdPlato(PlatoDTO plato) {
+        this.plato = plato;
     }
 
-    public Long getIdOcupacion() {
-        return idOcupacion;
+    public OcupacionDTO getOcupacion() {
+        return ocupacion;
     }
 
-    public void setIdOcupacion(Long idOcupacion) {
-        this.idOcupacion = idOcupacion;
+    public void setOcupacion(OcupacionDTO ocupacion) {
+        this.ocupacion = ocupacion;
     }
 
     @Override
     public String toString() {
         return "DetallePlatoDTO{" +
                 ", cantidad=" + cantidad +
-                ", idPorcion=" + idPorcion +
-                ", idPlato=" + idPlato +
-                ", idOcupacion=" + idOcupacion +
+                ", porcion=" + porcion +
+                ", plato=" + plato +
+                ", ocupacion=" + ocupacion +
                 '}';
     }
 }
