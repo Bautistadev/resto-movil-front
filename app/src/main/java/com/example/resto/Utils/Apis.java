@@ -6,6 +6,7 @@ public class Apis {
     //CREAMOS URLS
     public static final String urlMarca = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Marca/";
     public static final String urlPersona = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Cliente/";
+
     public static final String urlEmpleado = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Empleado/";
     public static final String urlLogin = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/security/";
     public static final String urlPlato = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Plato/";
@@ -18,6 +19,9 @@ public class Apis {
     //ACCEDIMOS A LA URL QUE REPRESENTA A UN SERVICIO WEB
     public static MarcaService getMarcaService(){
         return  RetrofitControl.getRetrofit(urlMarca).create(MarcaService.class);
+    }
+    public static EmpleadoService getEmpleadoService(){
+        return RetrofitControl.getRetrofit(urlEmpleado).create(EmpleadoService.class);
     }
     public static ClienteService getClienteService(){
         return RetrofitControl.getRetrofit(urlPersona).create(ClienteService.class);

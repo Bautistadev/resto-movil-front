@@ -1,57 +1,46 @@
 package com.example.resto;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 
-import com.example.resto.EntityDTO.ClienteDTO;
-import com.example.resto.EntityDTO.EmpleadoDTO;
-import com.example.resto.Service.ClienteService;
-import com.example.resto.Service.EmpleadoService;
-import com.example.resto.Utils.Apis;
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class MainActivity extends AppCompatActivity {
-
-    private String alerta = "hola";
+    private Button btnEmpleados;
+    private Button btnPizzeria;
+    private Intent panelLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        EmpleadoService apiService = Apis.getEmpleadoService();
+        this.btnPizzeria = findViewById(R.id.btnPizzeria);
+        this.btnEmpleados =  findViewById(R.id.btnEmpleados);
 
-        Call<List<EmpleadoDTO>> call = apiService.retriveAllEmpleado();
+        this.panelLogin = new Intent(MainActivity.this, Login.class);
 
-        call.enqueue(new Callback<List<EmpleadoDTO>>() {
-
-            @Override
-            public void onResponse(Call<List<EmpleadoDTO>> call, Response<List<EmpleadoDTO>> response) {
-                if (response.isSuccessful()) {
-                    List<EmpleadoDTO> productos = response.body();
-                    // Realiza las acciones necesarias con la lista de productos
-                    for (EmpleadoDTO producto : productos) {
-                        Log.d("MainActivity", "Producto: " + producto.toString());
-                    }
-                } else {
-                    // Maneja el caso de respuesta no exitosa
-
-                    Log.e("MainActivity", response.errorBody().toString());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<EmpleadoDTO>> call, Throwable t) {
-                Log.e("MainActivity", "Error en la consulta a la API", t);
-            }
-        });
-
+        this.btnEmpleados.setOnClickListener(this);
     }
+
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.btnEmpleados){
+            startActivity(this.panelLogin);
+        }
+    }
+
+    /**
+     * A simple {@link Fragment} subclass.
+     * Use the {@link Ordenes#newInstance} factory method to
+     * create an instance of this fragment.
+     */
+
 }

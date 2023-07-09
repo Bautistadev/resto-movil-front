@@ -15,12 +15,12 @@ import retrofit2.http.Path;
 
 public interface MesaService {
 
-    @GET("retrive/{id}")
+    @GET("retrive/{id}?_expand=empleado")
     Call<MesaDTO>retrive(@Path("id")Long id);
 
-    @PUT("update")
+    @PUT("update?_expand=empleado")
     Call<MesaDTO> update(@Body MesaDTO mesa);
 
-    @PUT("retriveAll")
+    @GET("retriveAll?_expand=empleado")
     Call<List<MesaDTO>>retriveAll();
 }

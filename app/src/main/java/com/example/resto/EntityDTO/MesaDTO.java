@@ -7,13 +7,13 @@ public class MesaDTO {
 
     private String token;
     private boolean estado;
-    private Long idEmpleado;
+    private EmpleadoDTO empleado;
 
-    public MesaDTO(Long id, String token, boolean estado, Long idEmpleado) {
+    public MesaDTO(Long id, String token, boolean estado, EmpleadoDTO empleado) {
         this.id = id;
         this.token = token;
         this.estado = estado;
-        this.idEmpleado = idEmpleado;
+        this.empleado = empleado;
     }
 
     public MesaDTO() {
@@ -43,12 +43,12 @@ public class MesaDTO {
         this.estado = estado;
     }
 
-    public Long getIdEmpleado() {
-        return idEmpleado;
+    public EmpleadoDTO getEmpleado() {
+        return empleado;
     }
 
-    public void setIdEmpleado(Long idEmpleado) {
-        this.idEmpleado = idEmpleado;
+    public void setEmpleado(EmpleadoDTO empleado) {
+        this.empleado = empleado;
     }
 
     @Override
@@ -57,7 +57,6 @@ public class MesaDTO {
                 "id=" + id +
                 ", token='" + token + '\'' +
                 ", estado=" + estado +
-                ", idEmpleado=" + idEmpleado +
                 '}';
     }
 }
