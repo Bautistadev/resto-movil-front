@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btnEmpleados;
     private Button btnPizzeria;
     private Intent panelLogin;
+    private Intent panelCarta;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.btnEmpleados =  findViewById(R.id.btnEmpleados);
 
         this.panelLogin = new Intent(MainActivity.this, Login.class);
+        this.panelCarta = new Intent(MainActivity.this,Carta.class);
 
         this.btnEmpleados.setOnClickListener(this);
         this.btnPizzeria.setOnClickListener(this);
@@ -103,14 +105,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onResponse(Call<MesaDTO> call, Response<MesaDTO> response) {
         if(response.isSuccessful()){
             MesaDTO mesaDTO =  response.body();
-            Toast.makeText(this,mesaDTO.toString(),Toast.LENGTH_LONG).show();
-            System.out.println("mesaaaaaa"+mesaDTO.toString());
-
             //GUARDAMOS EL TOKEN EN MEMORIA
             SharedPreferences memoria = getSharedPreferences("Mesa",MODE_PRIVATE);
             SharedPreferences.Editor editor = memoria.edit();
             editor.putString("MesaMemory",new Gson().toJson(mesaDTO));
             editor.apply();
+
+            startActivity(panelCarta);
         }else {
             if (response.errorBody() != null) {
                 try {
