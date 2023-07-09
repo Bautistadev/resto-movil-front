@@ -60,6 +60,7 @@ public class Login extends AppCompatActivity implements Callback<TokenObject>, V
             SharedPreferences memoria = getSharedPreferences("Login",MODE_PRIVATE);
             SharedPreferences.Editor editor = memoria.edit();
             editor.putString("token",token.getAccess_token());
+            editor.apply();
 
             //NOS MOVEMOS DE ACTIVITY
             startActivity(this.panelEmpleadoMenuPrincipal);

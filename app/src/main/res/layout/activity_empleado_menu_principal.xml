@@ -14,8 +14,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:background="@android:color/holo_red_light"
-
+        android:id="@+id/Toolbar"
         android:elevation="8dp" >
+
 
         <TextView
             android:id="@+id/textView"
@@ -27,6 +28,9 @@
             android:gravity="center"
             />
     </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+
+
     <ListView
         android:id="@+id/ListViewMesa"
         android:layout_width="match_parent"

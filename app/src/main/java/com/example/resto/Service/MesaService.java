@@ -23,4 +23,7 @@ public interface MesaService {
 
     @GET("retriveAll?_expand=empleado")
     Call<List<MesaDTO>>retriveAll();
+
+    @GET("retriveMesaByToken/{token}")
+    Call<MesaDTO> retriveMesaByToken(@Path("token") String token);
 }
