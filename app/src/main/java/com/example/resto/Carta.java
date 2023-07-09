@@ -1,9 +1,21 @@
 package com.example.resto;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
+import android.location.Location;
+
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.resto.EntityDTO.GeolocalizacionDTO;
 import com.google.gson.Gson;
@@ -21,7 +33,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class Carta extends AppCompatActivity implements Runnable {
+public class Carta extends AppCompatActivity implements Runnable,LocationListener{
 
 
     private static final String API_ENDPOINT = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Geolocalizacion/retriveAll"; // URL de la API que deseas monitorear
@@ -32,6 +44,10 @@ public class Carta extends AppCompatActivity implements Runnable {
 
     private ExecutorService executorService;
 
+
+    private LocationManager locationManager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +56,25 @@ public class Carta extends AppCompatActivity implements Runnable {
         client = new OkHttpClient();
         previousList = new ArrayList<>();
 
-       executorService = Executors.newSingleThreadExecutor();
-       executorService.execute(this);
+        int permiso = ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION);
+
+        if(permiso == PackageManager.PERMISSION_DENIED){
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION)){
+
+            }else{
+                ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION },1);
+            }
+        }
+
+
+        locationManager =(LocationManager) Carta.this.getSystemService(Context.LOCATION_SERVICE);
+
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,this);
+
+        executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(this);
     }
+
 
     @Override
     public void run() {
@@ -57,6 +89,8 @@ public class Carta extends AppCompatActivity implements Runnable {
         }
     }
 
+
+
     private void fetchDataFromAPI() {
         try {
             Request request = new Request.Builder()
@@ -65,10 +99,12 @@ public class Carta extends AppCompatActivity implements Runnable {
 
             try (Response response = client.newCall(request).execute()) {
                 List<GeolocalizacionDTO> resultList = parseListFromResponse(response.body().string());
-                System.out.println(resultList.toString());
+
                 if (resultList != null && !resultList.toString().equals(previousList.toString())) {
                     previousList = resultList;
                 }
+
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -83,5 +119,14 @@ public class Carta extends AppCompatActivity implements Runnable {
         List<GeolocalizacionDTO> resultList = gson.fromJson(response, listType);
 
         return resultList;
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        System.out.println("localizacion =====> "+ location.getLatitude()+":"+location.getLongitude());
+
+        System.out.println("DENTROO====>"+previousList.get(0).estaDentroDelArea((float) -34.9233539, (float) -57.9465919));
+
+        System.out.println("vacio: "+ previousList.get(0) == null);
     }
 }

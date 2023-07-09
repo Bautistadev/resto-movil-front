@@ -109,7 +109,17 @@ public class GeolocalizacionDTO {
     public void setY4(Float y4) {
         this.y4 = y4;
     }
+    public boolean estaDentroDelArea(Float x,Float y) {
+        // Verificar si el punto está dentro del área utilizando la fórmula del rectángulo
 
+
+        double minX = Math.min(this.x1, Math.min(this.x2, Math.min(this.x3, this.x4)));
+        double maxX = Math.max(this.x1, Math.max(this.x2, Math.max(this.x3, this.x4)));
+        double minY = Math.min(this.y1, Math.min(this.y2, Math.min(this.y3, this.y4)));
+        double maxY = Math.max(this.y1, Math.max(this.y2, Math.max(this.y3, this.y4)));
+
+        return x >= minX && x <= maxX && y >= minY && y <= maxY;
+    }
     @Override
     public String toString() {
         return "GeolocalizacionDTO{" +
