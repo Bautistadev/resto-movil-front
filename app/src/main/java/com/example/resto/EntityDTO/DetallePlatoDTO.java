@@ -2,10 +2,12 @@ package com.example.resto.EntityDTO;
 
 public class DetallePlatoDTO {
     private Long id;
-    private Integer cantidad;
+    private Integer cantidad = 0;
     private Porcion porcion;
     private PlatoDTO plato;
     private OcupacionDTO ocupacion;
+
+
 
     public DetallePlatoDTO(Long id,Integer cantidad, Porcion porcion, PlatoDTO plato, OcupacionDTO ocupacion) {
         this.id = id;
@@ -56,6 +58,9 @@ public class DetallePlatoDTO {
 
     public void setOcupacion(OcupacionDTO ocupacion) {
         this.ocupacion = ocupacion;
+    }
+    public void AumentarCantidad(){
+        this.cantidad = cantidad+1;
     }
 
     @Override

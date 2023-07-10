@@ -10,18 +10,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.pm.PermissionInfo;
 import android.location.Location;
 
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.resto.EntityDTO.DetalleBebidaDTO;
+import com.example.resto.EntityDTO.DetalleBebidaRequestDTO;
+import com.example.resto.EntityDTO.DetallePlatoRequestDTO;
 import com.example.resto.EntityDTO.GeolocalizacionDTO;
 import com.example.resto.EntityDTO.MesaDTO;
-import com.example.resto.EntityDTO.Message;
+import com.example.resto.EntityDTO.OcupacionRequestDTO;
 import com.example.resto.Utils.Apis;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -29,6 +33,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOError;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -41,7 +46,7 @@ import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class Carta extends AppCompatActivity implements Runnable,LocationListener, Callback<MesaDTO> {
+public class Carta extends AppCompatActivity implements Runnable,LocationListener, Callback<MesaDTO>, View.OnClickListener {
 
 
     private static final String API_ENDPOINT = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Geolocalizacion/retriveAll"; // URL de la API que deseas monitorear
@@ -51,22 +56,30 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
     private List<GeolocalizacionDTO> previousList;
     private ExecutorService executorService;
     private LocationManager locationManager;
-
     private MesaDTO mesaActual;
 
+    private Button btnPizza;
+    private Button btnBebida;
+
+    private Intent panelPizza;
+    private Intent panelBebida;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_carta);
 
+        this.btnPizza = findViewById(R.id.btnPizza);
+        this.btnBebida = findViewById(R.id.btnBebida);
+
         client = new OkHttpClient();
         previousList = new ArrayList<>();
 
-
-
         mesaActual = this.getMemoryTable();
 
+
+        this.panelPizza = new Intent(Carta.this, PizzasActivity.class);
+        this.panelBebida = new Intent(Carta.this,Bebida.class);
 
 
         int permiso = ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION);
@@ -81,6 +94,9 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
         Call<MesaDTO> call = Apis.getMesaService().update(mesaActual);
         call.enqueue(this);
 
+        this.btnPizza.setOnClickListener(this);
+        this.btnBebida.setOnClickListener(this);
+
         executorService = Executors.newSingleThreadExecutor();
         executorService.execute(this);
 
@@ -88,8 +104,80 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
 
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,this);
 
+        this.GenerarOcupacion();
+
+        Ordenes();
 
 
+    }
+
+    void GenerarOcupacion(){
+
+        OcupacionRequestDTO ocupacion = new OcupacionRequestDTO();
+
+        ocupacion.setMesa(this.mesaActual);
+        System.out.println("id mesaaaaaaa ====>"+this.mesaActual.toString());
+
+        SharedPreferences memoriaPlato = getSharedPreferences("Ocupacion",MODE_PRIVATE);
+        SharedPreferences.Editor editorPlato = memoriaPlato.edit();
+        if(memoriaPlato.contains("Ocupacion")) {
+            System.out.println("No la contiene, por lo tanto la creamos");
+        }else{
+            System.out.println(memoriaPlato.getString("Ocupacion","0").toString());
+
+            Call<OcupacionRequestDTO> call = Apis.getOcupacionService().save(ocupacion);
+            call.enqueue(new Callback<OcupacionRequestDTO>() {
+                @Override
+                public void onResponse(Call<OcupacionRequestDTO> call, retrofit2.Response<OcupacionRequestDTO> response) {
+                    if(response.isSuccessful()){
+                        Toast.makeText(getBaseContext(),response.body().toString(),Toast.LENGTH_SHORT).show();
+
+                        editorPlato.putString("Ocupacion", new Gson().toJson(response.body().toString()));
+                        editorPlato.apply();
+                        System.out.println(response.body());
+                    }else {
+                        if (response.errorBody() != null) {
+                            try {
+                                System.out.println(response.code());
+                                System.out.println("error");
+                                System.out.println(response.toString());
+                            } catch (IOError e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<OcupacionRequestDTO> call, Throwable t) {
+                    Log.e("MainActivity", "Error en la consulta a la API", t);
+                }
+            });
+        }
+    }
+
+    public void Ordenes(){
+        List<DetallePlatoRequestDTO> detallePlato = new ArrayList<>();
+        SharedPreferences memoriaPlato = getSharedPreferences("DetallePlato",MODE_PRIVATE);
+        SharedPreferences.Editor editorPlato = memoriaPlato.edit();
+        if(!memoriaPlato.contains("detallePlatoMemory")) {
+            editorPlato.putString("detallePlatoMemory", new Gson().toJson(detallePlato));
+            System.out.println("No la contiene, por lo tanto la creamos");
+        }else{
+            System.out.println(memoriaPlato.getString("detallePlatoMemory","0").toString());
+        }
+        editorPlato.apply();
+
+        List<DetalleBebidaRequestDTO> detalleBebida = new ArrayList<>();
+        SharedPreferences memoriaBebida = getSharedPreferences("DetalleBebida",MODE_PRIVATE);
+        SharedPreferences.Editor editorBebida = memoriaBebida.edit();
+        if(!memoriaBebida.contains("detalleBebidaMemory")) {
+            editorPlato.putString("detalleBebidaMemory", new Gson().toJson(detallePlato));
+            System.out.println("No la contiene, por lo tanto la creamos");
+        }else{
+            System.out.println(memoriaBebida.getString("detalleBebidaMemory","0").toString());
+        }
+        editorPlato.apply();
     }
 
     public MesaDTO getMemoryTable(){
@@ -100,7 +188,7 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
 
         MesaDTO mesa = gson.fromJson(json, MesaDTO.class);
 
-        //LE CAMBIAMOS EL ESTADOA OCUPADO
+        //LE CAMBIAMOS EL ESTADO OCUPADO
         if(mesa.isEstado() == true)
             mesa.setEstado(false);
         else {
@@ -229,5 +317,15 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
 
 
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view.getId() == R.id.btnPizza){
+            startActivity(this.panelPizza);
+        }
+        if(view.getId() == R.id.btnBebida){
+            startActivity(this.panelBebida);
+        }
     }
 }

@@ -15,12 +15,12 @@ import retrofit2.http.Path;
 
 public interface PlatoService {
 
-    @GET("retrive/{id}")
+    @GET("retrivePlato/{id}")
     Call<PlatoDTO>retrive(@Path("id")Long id);
 
-    @PUT("update")
+    @PUT("updatePlato")
     Call<PlatoDTO> update(@Body PlatoDTO ocupacion);
 
-    @PUT("retriveAll")
-    Call<List<PlatoDTO>>retriveAll();
+    @GET("retriveAllPlato")
+    Call<List<PlatoDTO>>retriveAllPlato();
 }

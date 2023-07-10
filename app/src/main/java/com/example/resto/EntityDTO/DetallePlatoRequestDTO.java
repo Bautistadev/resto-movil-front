@@ -1,7 +1,7 @@
 package com.example.resto.EntityDTO;
 
 public class DetallePlatoRequestDTO {
-    private Integer cantidad;
+    private Integer cantidad = 0;
     private Porcion porcion;
     private PlatoDTO plato;
     private OcupacionDTO ocupacion;
@@ -49,10 +49,15 @@ public class DetallePlatoRequestDTO {
         this.ocupacion = ocupacion;
     }
 
+    public void AumentarCantidad(){
+        this.cantidad = cantidad+1;
+    }
+
+
     @Override
     public String toString() {
-        return "DetallePlatoDTO{" +
-                ", cantidad=" + cantidad +
+        return "DetallePlatoRequestDTO{" +
+                "cantidad=" + cantidad +
                 ", porcion=" + porcion +
                 ", plato=" + plato +
                 ", ocupacion=" + ocupacion +

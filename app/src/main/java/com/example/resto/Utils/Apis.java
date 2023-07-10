@@ -32,6 +32,9 @@ public class Apis {
     public static PlatoService getPlatoService(){
         return RetrofitControl.getRetrofit(urlPlato).create(PlatoService.class);
     }
+    public static BebidaService BebidaService(){
+        return RetrofitControl.getRetrofit(urlPlato).create(BebidaService.class);
+    }
     public static DetallePlatoService getDetallePlatoService(){
         return RetrofitControl.getRetrofit(urlPlatoDetalle).create(DetallePlatoService.class);
     }

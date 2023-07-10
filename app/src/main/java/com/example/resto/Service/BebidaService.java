@@ -10,7 +10,7 @@ import retrofit2.http.GET;
 public interface BebidaService {
 
     @GET("retriveAllBebida")
-    Call<List<BebidaDTO>> retriveAllCliente();
+    Call<List<BebidaDTO>> retriveAllBebida();
 
     @GET("retriveBebida/{id}")
     Call<BebidaDTO> retriveBebida();
