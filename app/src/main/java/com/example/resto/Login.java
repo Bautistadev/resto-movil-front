@@ -46,7 +46,6 @@ public class Login extends AppCompatActivity implements Callback<TokenObject>, V
     @Override
     public void onClick(View view) {
         LoginDTO login = new LoginDTO(this.txtUserName.getText().toString(),this.txtPassword.getText().toString());
-        System.out.println(login.toString());
         Call<TokenObject> call = Apis.getLoginService().validateSeccion(login);
         call.enqueue(this);
     }
@@ -60,6 +59,7 @@ public class Login extends AppCompatActivity implements Callback<TokenObject>, V
             SharedPreferences memoria = getSharedPreferences("Login",MODE_PRIVATE);
             SharedPreferences.Editor editor = memoria.edit();
             editor.putString("token",token.getAccess_token());
+            editor.putString("userName",this.txtUserName.getText().toString());
             editor.apply();
 
             //NOS MOVEMOS DE ACTIVITY

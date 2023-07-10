@@ -7,6 +7,8 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.location.Location;
@@ -18,9 +20,13 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.resto.EntityDTO.GeolocalizacionDTO;
+import com.example.resto.EntityDTO.MesaDTO;
+import com.example.resto.EntityDTO.Message;
+import com.example.resto.Utils.Apis;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.IOError;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -32,8 +38,10 @@ import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
 
-public class Carta extends AppCompatActivity implements Runnable,LocationListener{
+public class Carta extends AppCompatActivity implements Runnable,LocationListener, Callback<MesaDTO> {
 
 
     private static final String API_ENDPOINT = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Geolocalizacion/retriveAll"; // URL de la API que deseas monitorear
@@ -41,11 +49,10 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
 
     private OkHttpClient client;
     private List<GeolocalizacionDTO> previousList;
-
     private ExecutorService executorService;
-
-
     private LocationManager locationManager;
+
+    private MesaDTO mesaActual;
 
 
     @Override
@@ -56,8 +63,13 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
         client = new OkHttpClient();
         previousList = new ArrayList<>();
 
-        int permiso = ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION);
 
+
+        mesaActual = this.getMemoryTable();
+
+
+
+        int permiso = ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION);
         if(permiso == PackageManager.PERMISSION_DENIED){
             if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.ACCESS_FINE_LOCATION)){
 
@@ -66,15 +78,36 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
             }
         }
 
+        Call<MesaDTO> call = Apis.getMesaService().update(mesaActual);
+        call.enqueue(this);
+
+        executorService = Executors.newSingleThreadExecutor();
+        executorService.execute(this);
 
         locationManager =(LocationManager) Carta.this.getSystemService(Context.LOCATION_SERVICE);
 
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,0,0,this);
 
-        executorService = Executors.newSingleThreadExecutor();
-        executorService.execute(this);
+
+
     }
 
+    public MesaDTO getMemoryTable(){
+        SharedPreferences sharedPreferences = getSharedPreferences("Mesa", Context.MODE_PRIVATE);
+        String json = sharedPreferences.getString("MesaMemory", "0");
+
+        Gson gson = new Gson();
+
+        MesaDTO mesa = gson.fromJson(json, MesaDTO.class);
+
+        //LE CAMBIAMOS EL ESTADOA OCUPADO
+        if(mesa.isEstado() == true)
+            mesa.setEstado(false);
+        else {
+            mesa.setEstado(true);
+        }
+        return mesa;
+    }
 
     @Override
     public void run() {
@@ -88,8 +121,6 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
             }
         }
     }
-
-
 
     private void fetchDataFromAPI() {
         try {
@@ -125,8 +156,78 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
     public void onLocationChanged(@NonNull Location location) {
         System.out.println("localizacion =====> "+ location.getLatitude()+":"+location.getLongitude());
 
-        System.out.println("DENTROO====>"+previousList.get(0).estaDentroDelArea((float) -34.9233539, (float) -57.9465919));
+        try {
 
-        System.out.println("vacio: "+ previousList.get(0) == null);
+            System.out.println("DENTROO====>" + previousList.get(0).estaDentroDelArea((float) location.getLatitude(), (float)location.getLongitude()));
+            if(!previousList.get(0).estaDentroDelArea((float) location.getLatitude(), (float)location.getLongitude())){
+
+                //MOSTRAMOS MENSAJE DE EXPULSION
+                MainActivity.isExpulsed =  true;
+
+
+
+                mesaActual = this.getMemoryTable();
+
+                //CAMBIAMOS EL ESTADO DE LA MESA
+                Call<MesaDTO> call = Apis.getMesaService().update(mesaActual);
+                call.enqueue(this);
+
+                //DETENEMOS TODOS LOS PROCESOS DE BUSQUEDA
+                executorService.shutdown();
+                locationManager.removeUpdates(this);
+
+                //VOLVEMOS EL MENU
+                startActivity( new Intent(Carta.this,MainActivity.class));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void onResponse(Call<MesaDTO> call, retrofit2.Response<MesaDTO> response) {
+        if(response.isSuccessful()){
+            MesaDTO mesaDTO =  response.body();
+            //GUARDAMOS EL TOKEN EN MEMORIA
+            SharedPreferences memoria = getSharedPreferences("Mesa",MODE_PRIVATE);
+            SharedPreferences.Editor editor = memoria.edit();
+            editor.putString("MesaMemory",new Gson().toJson(mesaDTO));
+            editor.apply();
+
+        }else {
+            if (response.errorBody() != null) {
+                try {
+                    System.out.println(response.code());
+                    System.out.println("error");
+                } catch (IOError e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onFailure(Call<MesaDTO> call, Throwable t) {
+        Log.e("MainActivity", "Error en la consulta a la API", t);
+    }
+
+    public void onBackPressed() {
+        // No hacer nada para deshabilitar el botón de "Volver"
+        // Puedes dejar este método vacío o agregar algún otro código personalizado si lo deseas
+
+        mesaActual = this.getMemoryTable();
+        //CAMIAMOS EL ESTADO DE DEJAR MESA
+        Call<MesaDTO> call = Apis.getMesaService().update(mesaActual);
+        call.enqueue(this);
+
+        //DETENEMOS LOS PROCESOS DE BUSQUEDA
+        executorService.shutdown();
+        locationManager.removeUpdates(this);
+
+        //VOLVEMOS AL MENU
+        startActivity( new Intent(Carta.this,MainActivity.class));
+
+
+
     }
 }

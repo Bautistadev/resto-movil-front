@@ -48,6 +48,10 @@ public class Apis {
         return RetrofitControl.getRetrofit(urlOcupacion).create(OcupacionService.class);
     }
 
+    public static  MesaService updateMesa(){
+        return RetrofitControl.getRetrofit(urlMesa).create(MesaService.class);
+    }
+
 
 
 }

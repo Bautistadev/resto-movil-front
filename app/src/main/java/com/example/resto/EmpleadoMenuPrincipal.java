@@ -3,6 +3,7 @@ package com.example.resto;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,10 +23,12 @@ import com.example.resto.Service.LoginService;
 import com.example.resto.Service.MesaService;
 import com.example.resto.Utils.Apis;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
 
 import java.io.IOError;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,18 +55,28 @@ public class EmpleadoMenuPrincipal extends AppCompatActivity implements AdapterV
 
     }
 
+    public String getUserName(){
+        SharedPreferences sharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
+
+        return sharedPreferences.getString("userName", "0");
+    }
+
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         System.out.println("xx======>"+ listaMesa.get(i));
-        //MesaDTO mesa  = listaMesa.get(i);
-        //Toast.makeText(getBaseContext(),mesa.getId().toString(),Toast.LENGTH_SHORT).show();
+        MesaDTO mesa  = listaMesa.get(i);
+        Toast.makeText(getBaseContext(),mesa.getEmpleado().getApellido(),Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onResponse(Call<List<MesaDTO>> call, Response<List<MesaDTO>> response) {
         if (response.isSuccessful()) {
-            listaMesa = response.body();
+            //FILTRAMOS LA MESA QUE LE CORRESPONDE A ESE USUARIO
+            listaMesa = response.body().stream().filter(mesa -> mesa.getEmpleado().getUserName().equals(this.getUserName())).collect(Collectors.toList());
+
+            //ADAPTAMOS
             adapter = new MesasListAdapter(this,listaMesa);
+
             ListViewMesa.setAdapter(adapter);
         } else {
             if(response.errorBody() != null){

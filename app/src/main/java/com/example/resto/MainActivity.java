@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.resto.EntityDTO.MesaDTO;
+import com.example.resto.EntityDTO.Message;
 import com.example.resto.EntityDTO.TokenObject;
 import com.example.resto.Utils.Apis;
 import com.google.gson.Gson;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private static final String API_ENDPOINT = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Hora/retriveHora"; // URL de la API que deseas monitorear
     private static final long CHECK_INTERVAL_MS = 5000; // Intervalo de tiempo en milisegundos entre cada consulta
+    public static boolean isExpulsed = false;
 
    // private OkHttpClient client;
     private String previousValue;
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         //client = new OkHttpClient();
-        previousValue = "";
+
 
       //  new Thread(this).start();
 
@@ -63,6 +65,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         this.panelLogin = new Intent(MainActivity.this, Login.class);
         this.panelCarta = new Intent(MainActivity.this,Carta.class);
+
+        if(isExpulsed == true){
+            new Message(this,"Alerta","FUERA DE RANGO, MESA LIBERADA !!").onlyOption();
+            isExpulsed = false;
+        }
+
 
         this.btnEmpleados.setOnClickListener(this);
         this.btnPizzeria.setOnClickListener(this);
@@ -128,13 +136,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onFailure(Call<MesaDTO> call, Throwable t) {
         Log.e("MainActivity", "Error en la consulta a la API", t);
     }
-
-
-
-
-
-
-
 
 
     /*
