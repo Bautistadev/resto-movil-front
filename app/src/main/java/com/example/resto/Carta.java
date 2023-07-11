@@ -125,9 +125,10 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
 
         SharedPreferences memoriaOcupacion = getSharedPreferences("Ocupacion",MODE_PRIVATE);
         SharedPreferences.Editor editorOcupacion = memoriaOcupacion.edit();
-      //  if(memoriaOcupacion.contains("Ocupacion")) {
-            System.out.println("No la contiene, por lo tanto la creamos");
-        //}else{
+         if(memoriaOcupacion.contains("Ocupacion")) {
+
+             Toast.makeText(getBaseContext(),"Usted posee una ocupacion",Toast.LENGTH_LONG).show();
+         }else{
             System.out.println(memoriaOcupacion.getString("Ocupacion","0").toString());
 
             Call<OcupacionRequestDTO> call = Apis.getOcupacionService().save(ocupacion);
@@ -135,7 +136,7 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
                 @Override
                 public void onResponse(Call<OcupacionRequestDTO> call, retrofit2.Response<OcupacionRequestDTO> response) {
                     if(response.isSuccessful()){
-                        Toast.makeText(getBaseContext(),new Gson().toJson(response.body()),Toast.LENGTH_LONG).show();
+                        Toast.makeText(getBaseContext(),"Nueva ocupacion",Toast.LENGTH_LONG).show();
                         System.out.println(new Gson().toJson(response.body()));
                         editorOcupacion.putString("Ocupacion", new Gson().toJson(response.body()));
                         editorOcupacion.apply();
@@ -158,7 +159,7 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
                     Log.e("MainActivity", "Error en la consulta a la API", t);
                 }
             });
-        //}
+        }
     }
 
     public void Ordenes(){
@@ -252,12 +253,25 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
         try {
 
             System.out.println("DENTROO====>" + previousList.get(0).estaDentroDelArea((float) location.getLatitude(), (float)location.getLongitude()));
-            if(!previousList.get(0).estaDentroDelArea((float) location.getLatitude(), (float)location.getLongitude())){
+            if(!previousList.get(0).estaDentroDelArea((float) location.getLatitude(), (float)location.getLongitude()) ){
 
                 //MOSTRAMOS MENSAJE DE EXPULSION
                 MainActivity.isExpulsed =  true;
 
+                SharedPreferences memoriaPlato = getSharedPreferences("DetallePlato",MODE_PRIVATE);
+                SharedPreferences.Editor editorPlato = memoriaPlato.edit();
+                editorPlato.remove("detallePlatoMemory");
+                editorPlato.apply();
 
+                SharedPreferences memoriaBebida = getSharedPreferences("DetalleBebida",MODE_PRIVATE);
+                SharedPreferences.Editor editorBebida = memoriaBebida.edit();
+                editorBebida.remove("detalleBebidaMemory");
+                editorBebida.apply();
+
+                SharedPreferences memoriaOcupacion = getSharedPreferences("Ocupacion",MODE_PRIVATE);
+                SharedPreferences.Editor editorOcupacion = memoriaOcupacion.edit();
+                editorOcupacion.remove("Ocupacion");
+                editorOcupacion.apply();
 
                 mesaActual = this.getMemoryTable();
 

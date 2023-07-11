@@ -1,5 +1,7 @@
 package com.example.resto.EntityDTO;
 
+import java.util.Objects;
+
 public class MesaDTO {
 
 
@@ -59,6 +61,19 @@ public class MesaDTO {
 
     public void setGeolocalizacion(GeolocalizacionDTO geolocalizacion) {
         this.geolocalizacion = geolocalizacion;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MesaDTO)) return false;
+        MesaDTO mesaDTO = (MesaDTO) o;
+        return estado == mesaDTO.estado && Objects.equals(id, mesaDTO.id) && Objects.equals(token, mesaDTO.token) && Objects.equals(empleado, mesaDTO.empleado) && Objects.equals(geolocalizacion, mesaDTO.geolocalizacion);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, token, estado, empleado, geolocalizacion);
     }
 
     @Override
