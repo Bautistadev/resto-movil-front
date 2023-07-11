@@ -25,20 +25,36 @@
             android:layout_height="match_parent"
             android:layout_weight="60"
             android:gravity="center"
-            android:text="Menu"
-            android:textSize="20dp" />
+            android:textColor="@color/white"
+            android:textSize="40dp"
+            android:text="Pizzas🍕"
+            />
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
     <ListView
         android:id="@+id/ListViewPizzas"
         android:layout_width="match_parent"
-        android:layout_height="581dp" />
+        android:layout_height="581dp"
+        android:background="@drawable/bordes"
+        />
 
-    <Button
-        android:id="@+id/btnCargar"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cargar" />
+        android:layout_height="match_parent">
+        <Button
+            android:id="@+id/btnCargar"
+            android:layout_width="355dp"
+            android:layout_height="47dp"
+            android:background="@drawable/bordes"
+            android:backgroundTint="@color/red"
+            android:text="Cargar✔️"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </LinearLayout>

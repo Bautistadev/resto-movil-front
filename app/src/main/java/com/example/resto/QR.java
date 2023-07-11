@@ -24,7 +24,7 @@ public class QR extends AppCompatActivity {
         this.image = findViewById(R.id.qrCode);
         BarcodeEncoder codigo = new BarcodeEncoder();
         try {
-            Bitmap bitmap = codigo.encodeBitmap(code, BarcodeFormat.QR_CODE,750,750);
+            Bitmap bitmap = codigo.encodeBitmap(code, BarcodeFormat.QR_CODE,1000,1000);
             image.setImageBitmap(bitmap);
         } catch (WriterException e) {
             throw new RuntimeException(e);

@@ -64,7 +64,18 @@ public class BebidaAdapter extends BaseAdapter {
         this.lblPrecioBebida.setText("$"+listaBebida.get(i).getPrecio());
         this.lblCantidad.setText("0");
 
-        imageViewPizza.setImageResource(R.mipmap.oibre_image_foreground);
+        switch (i){
+            case 0: imageViewPizza.setImageResource(R.mipmap.bebida1_round);
+                break;
+            case 1: imageViewPizza.setImageResource(R.mipmap.bebida2_round);
+                break;
+            case 2: imageViewPizza.setImageResource(R.mipmap.bebida3_round);
+                break;
+            default:
+                imageViewPizza.setImageResource(R.mipmap.oibre_image_foreground);
+                break;
+        }
+
 
         return view;
     }

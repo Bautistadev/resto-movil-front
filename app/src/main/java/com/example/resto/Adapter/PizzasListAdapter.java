@@ -66,7 +66,23 @@ public class PizzasListAdapter extends BaseAdapter {
         lblPizza.setText(listaPizza.get(i).getNombre());
         lblPrecio.setText("$"+listaPizza.get(i).getPrecio());
         lblCantidad.setText("0");
-        imageViewPizza.setImageResource(R.mipmap.oibre_image_foreground);
+        switch (i){
+            case 0 :
+                imageViewPizza.setImageResource(R.mipmap.pizza1);
+                break;
+            case 1:
+                imageViewPizza.setImageResource(R.mipmap.pizza2);
+                break;
+            case 2:
+                imageViewPizza.setImageResource(R.mipmap.pizza3);
+                break;
+            case 3:
+                imageViewPizza.setImageResource(R.mipmap.pizza4);
+                break;
+            default:
+                imageViewPizza.setImageResource(R.mipmap.oibre_image_foreground);
+                break;
+        }
 
         return view;
     }
