@@ -61,8 +61,11 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
     private Button btnPizza;
     private Button btnBebida;
 
+    private Button btnOrden;
+
     private Intent panelPizza;
     private Intent panelBebida;
+    private Intent panelOrden;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,7 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
 
         this.btnPizza = findViewById(R.id.btnPizza);
         this.btnBebida = findViewById(R.id.btnBebida);
+        this.btnOrden = findViewById(R.id.btnVerDetalle);
 
         client = new OkHttpClient();
         previousList = new ArrayList<>();
@@ -80,7 +84,7 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
 
         this.panelPizza = new Intent(Carta.this, PizzasActivity.class);
         this.panelBebida = new Intent(Carta.this,Bebida.class);
-
+        this.panelOrden =  new Intent(Carta.this,OrdenActivity.class);
 
         int permiso = ContextCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION);
         if(permiso == PackageManager.PERMISSION_DENIED){
@@ -96,6 +100,7 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
 
         this.btnPizza.setOnClickListener(this);
         this.btnBebida.setOnClickListener(this);
+        this.btnOrden.setOnClickListener(this);
 
         executorService = Executors.newSingleThreadExecutor();
         executorService.execute(this);
@@ -118,22 +123,22 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
         ocupacion.setMesa(this.mesaActual);
         System.out.println("id mesaaaaaaa ====>"+this.mesaActual.toString());
 
-        SharedPreferences memoriaPlato = getSharedPreferences("Ocupacion",MODE_PRIVATE);
-        SharedPreferences.Editor editorPlato = memoriaPlato.edit();
-        if(memoriaPlato.contains("Ocupacion")) {
+        SharedPreferences memoriaOcupacion = getSharedPreferences("Ocupacion",MODE_PRIVATE);
+        SharedPreferences.Editor editorOcupacion = memoriaOcupacion.edit();
+      //  if(memoriaOcupacion.contains("Ocupacion")) {
             System.out.println("No la contiene, por lo tanto la creamos");
-        }else{
-            System.out.println(memoriaPlato.getString("Ocupacion","0").toString());
+        //}else{
+            System.out.println(memoriaOcupacion.getString("Ocupacion","0").toString());
 
             Call<OcupacionRequestDTO> call = Apis.getOcupacionService().save(ocupacion);
             call.enqueue(new Callback<OcupacionRequestDTO>() {
                 @Override
                 public void onResponse(Call<OcupacionRequestDTO> call, retrofit2.Response<OcupacionRequestDTO> response) {
                     if(response.isSuccessful()){
-                        Toast.makeText(getBaseContext(),response.body().toString(),Toast.LENGTH_SHORT).show();
-
-                        editorPlato.putString("Ocupacion", new Gson().toJson(response.body().toString()));
-                        editorPlato.apply();
+                        Toast.makeText(getBaseContext(),new Gson().toJson(response.body()),Toast.LENGTH_LONG).show();
+                        System.out.println(new Gson().toJson(response.body()));
+                        editorOcupacion.putString("Ocupacion", new Gson().toJson(response.body()));
+                        editorOcupacion.apply();
                         System.out.println(response.body());
                     }else {
                         if (response.errorBody() != null) {
@@ -153,7 +158,7 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
                     Log.e("MainActivity", "Error en la consulta a la API", t);
                 }
             });
-        }
+        //}
     }
 
     public void Ordenes(){
@@ -300,32 +305,24 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
     }
 
     public void onBackPressed() {
-        // No hacer nada para deshabilitar el botón de "Volver"
-        // Puedes dejar este método vacío o agregar algún otro código personalizado si lo deseas
-
-        mesaActual = this.getMemoryTable();
-        //CAMIAMOS EL ESTADO DE DEJAR MESA
-        Call<MesaDTO> call = Apis.getMesaService().update(mesaActual);
-        call.enqueue(this);
-
-        //DETENEMOS LOS PROCESOS DE BUSQUEDA
-        executorService.shutdown();
-        locationManager.removeUpdates(this);
-
-        //VOLVEMOS AL MENU
-        startActivity( new Intent(Carta.this,MainActivity.class));
-
 
 
     }
 
+
+
     @Override
     public void onClick(View view) {
+
         if(view.getId() == R.id.btnPizza){
             startActivity(this.panelPizza);
         }
         if(view.getId() == R.id.btnBebida){
             startActivity(this.panelBebida);
         }
+        if(view.getId() == R.id.btnVerDetalle){
+            startActivity(this.panelOrden);
+        }
+
     }
 }

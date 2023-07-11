@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,8 +65,12 @@ public class EmpleadoMenuPrincipal extends AppCompatActivity implements AdapterV
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         System.out.println("xx======>"+ listaMesa.get(i));
+        Intent qrActivity = new Intent(EmpleadoMenuPrincipal.this,QR.class);
+
         MesaDTO mesa  = listaMesa.get(i);
-        Toast.makeText(getBaseContext(),mesa.getEmpleado().getApellido(),Toast.LENGTH_SHORT).show();
+        QR.code = mesa.getToken();
+        startActivity(qrActivity);
+
     }
 
     @Override

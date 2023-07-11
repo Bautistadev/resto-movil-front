@@ -1,32 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:orientation="vertical">
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/Toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
 
-    <Button
-        android:id="@+id/btnPizzeria"
-        android:layout_width="258dp"
-        android:layout_height="61dp"
-        android:layout_marginTop="284dp"
-        android:text="Pizzeria"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:background="@android:color/holo_red_light"
+        android:elevation="8dp">
 
-    <Button
-        android:id="@+id/btnEmpleados"
-        android:layout_width="258dp"
-        android:layout_height="61dp"
-        android:layout_marginTop="84dp"
-        android:text="Empleados"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnPizzeria"
-        app:layout_constraintVertical_bias="0.0" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="60"
+            android:fontFamily="@font/poppins_medium"
+            android:gravity="center"
+            android:text="Acceder🔑"
+            android:textColor="@color/white"
+            android:textSize="35dp" />
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        >
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="320dp"
+            android:layout_height="275dp"
+            android:layout_marginTop="50dp"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@mipmap/logo_image2_foreground" />
+
+        <Button
+            android:id="@+id/btnPizzeria"
+            android:layout_width="322dp"
+            android:layout_height="78dp"
+            android:layout_marginTop="56dp"
+            android:background="@drawable/bordes"
+            android:backgroundTint="@color/red"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Pizzeria🍕"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="40dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.483"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+        <Button
+            android:id="@+id/btnEmpleados"
+            android:layout_width="322dp"
+            android:layout_height="78dp"
+            android:layout_marginBottom="68dp"
+            android:background="@drawable/bordes"
+            android:backgroundTint="@color/red"
+            android:fontFamily="@font/poppins_medium"
+            android:text="Empleados✍️"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="40dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.505"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnPizzeria"
+            app:layout_constraintVertical_bias="0.384" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>
