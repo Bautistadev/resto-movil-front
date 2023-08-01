@@ -67,9 +67,18 @@ public class DetalleAdapter extends BaseAdapter {
        this.lblNombre.setText(listaPlato.get(i).getNombre());
         this.lblPrecio.setText("$"+listaPlato.get(i).getPrecio().toString());
         this.lblCantidad.setText(listaCantidad.get(i).toString());
+        System.out.println(listaPlato.get(i).getId() + "----"+listaPlato.get(i).getNombre());
 
-        imageViewPizza.setImageResource(R.mipmap.oibre_image_foreground);
-
+        if(listaPlato.get(i).getId() == 1)
+             imageViewPizza.setImageResource(R.mipmap.pizza1);
+        else if (listaPlato.get(i).getId() == 2) {
+            imageViewPizza.setImageResource(R.mipmap.pizza2);
+        }else if (listaPlato.get(i).getId() ==3) {
+            imageViewPizza.setImageResource(R.mipmap.pizza3);
+        }else if (listaPlato.get(i).getId() ==4) {
+            imageViewPizza.setImageResource(R.mipmap.pizza4);
+        }else
+            imageViewPizza.setImageResource(R.mipmap.oibre_image_foreground);
 
         return view;
     }

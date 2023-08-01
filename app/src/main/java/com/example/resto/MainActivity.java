@@ -2,11 +2,16 @@ package com.example.resto;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +40,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, Callback<MesaDTO>/*, Runnable*/{
 
-    private static final String API_ENDPOINT = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Hora/retriveHora"; // URL de la API que deseas monitorear
+    private static final String API_ENDPOINT = "http://192.168.79.10:8080/resto-0.0.1-SNAPSHOT/api/v1/Hora/retriveHora"; // URL de la API que deseas monitorear
     private static final long CHECK_INTERVAL_MS = 5000; // Intervalo de tiempo en milisegundos entre cada consulta
     public static boolean isExpulsed = false;
 
@@ -66,8 +71,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         this.panelLogin = new Intent(MainActivity.this, Login.class);
         this.panelCarta = new Intent(MainActivity.this,Carta.class);
 
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channel= new NotificationChannel("Mi notificacion","Mi notificacion", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(MainActivity.this,"Mi notificacion");
+        builder.setContentTitle("Mesas");
+        builder.setSmallIcon(R.mipmap.logo_image2);
+        builder.setAutoCancel(true);
+
         if(isExpulsed == true){
             new Message(this,"Alerta","FUERA DE RANGO, MESA LIBERADA !!").onlyOption();
+            builder.setContentText(" FUERA DE RANGO, MESA LIBERADA ❗");
+            NotificationManagerCompat managerCompat =  NotificationManagerCompat.from(MainActivity.this);
+            managerCompat.notify(1,builder.build());
             isExpulsed = false;
         }
 

@@ -49,7 +49,7 @@ import retrofit2.Callback;
 public class Carta extends AppCompatActivity implements Runnable,LocationListener, Callback<MesaDTO>, View.OnClickListener {
 
 
-    private static final String API_ENDPOINT = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Geolocalizacion/retriveAll"; // URL de la API que deseas monitorear
+    private static final String API_ENDPOINT = "http://192.168.79.10:8080/resto-0.0.1-SNAPSHOT/api/v1/Geolocalizacion/retriveAll"; // URL de la API que deseas monitorear
     private static final long CHECK_INTERVAL_MS = 5000; // Intervalo de tiempo en milisegundos entre cada consulta
 
     private OkHttpClient client;
@@ -95,8 +95,6 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
             }
         }
 
-        Call<MesaDTO> call = Apis.getMesaService().update(mesaActual);
-        call.enqueue(this);
 
         this.btnPizza.setOnClickListener(this);
         this.btnBebida.setOnClickListener(this);
@@ -130,6 +128,10 @@ public class Carta extends AppCompatActivity implements Runnable,LocationListene
              Toast.makeText(getBaseContext(),"Usted posee una ocupacion",Toast.LENGTH_LONG).show();
          }else{
             System.out.println(memoriaOcupacion.getString("Ocupacion","0").toString());
+
+            //CAMBIO DE ESTADO DE LA MESA
+             Call<MesaDTO> call2 = Apis.getMesaService().update(mesaActual);
+             call2.enqueue(this);
 
             Call<OcupacionRequestDTO> call = Apis.getOcupacionService().save(ocupacion);
             call.enqueue(new Callback<OcupacionRequestDTO>() {

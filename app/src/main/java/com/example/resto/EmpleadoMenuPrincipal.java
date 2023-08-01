@@ -53,7 +53,7 @@ import retrofit2.Response;
 
 public class EmpleadoMenuPrincipal extends AppCompatActivity implements Runnable, AdapterView.OnItemClickListener, Callback<List<MesaDTO>>  {
 
-    private static final String API_ENDPOINT = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Mesa/retriveAll"; // URL de la API que deseas monitorear
+    private static final String API_ENDPOINT = "http://192.168.79.10:8080/resto-0.0.1-SNAPSHOT/api/v1/Mesa/retriveAll"; // URL de la API que deseas monitorear
     private static final long CHECK_INTERVAL_MS = 5000; // Intervalo de tiempo en milisegundos entre cada consulta
 
     private OkHttpClient client;
@@ -173,11 +173,11 @@ public class EmpleadoMenuPrincipal extends AppCompatActivity implements Runnable
 
                         if(!this.listaMesa.get(contador).isEstado()) {
                             this.listaMesa.get(contador).setEstado(true);
+                            builder.setContentText("MESA:"+ i.getId()+" LIBRE ✔️");
 
-                            builder.setContentText("MESA:" + i.getId() + " OCUPADA");
                         }else {
                             this.listaMesa.get(contador).setEstado(false);
-                            builder.setContentText("MESA:"+ i.getId()+" LIBRE");
+                            builder.setContentText("MESA:" + i.getId() + " OCUPADA ❌");
                         }
                         NotificationManagerCompat managerCompat =  NotificationManagerCompat.from(EmpleadoMenuPrincipal.this);
                         managerCompat.notify(1,builder.build());

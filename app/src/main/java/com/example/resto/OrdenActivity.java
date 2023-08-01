@@ -2,10 +2,12 @@ package com.example.resto;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -41,6 +43,10 @@ public class OrdenActivity extends AppCompatActivity implements View.OnClickList
     private DetalleAdapter adapterPizza;
     private DetalleBebidaAdapter adapterBebida;
 
+    private Button btnOrdenar;
+
+    private Intent panelCarta;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +55,9 @@ public class OrdenActivity extends AppCompatActivity implements View.OnClickList
 
         this.ListViewPizza = findViewById(R.id.LPizza);
         this.ListViewBebida = findViewById(R.id.ListBebida);
+        this.btnOrdenar = findViewById(R.id.btnOrdena);
 
-
-
+        this.panelCarta =  new Intent(OrdenActivity.this,Carta.class);
 
        List<DetalleBebidaRequestDTO> detalleBebida = new ArrayList<>();
         SharedPreferences memoriaBebida = getSharedPreferences("DetalleBebida",MODE_PRIVATE);
@@ -72,21 +78,19 @@ public class OrdenActivity extends AppCompatActivity implements View.OnClickList
         platos = parseListPlatoFromResponse(memoriaPlato.getString("detallePlatoMemory","0").toString());
         ocupacion = parseListOcupacionFromResponse(memoriaOcupacion.getString("Ocupacion","0").toString());
 
-        //Toast.makeText(getBaseContext(),ocupacion.getMesa().toString(),Toast.LENGTH_LONG).show();
-
-        //ocupacion= gson.fromJson( memoriaOcupacion.getString("Ocupacion","0"), List.class);
-
-       // List<Integer>cantidad = this.platos.stream().map(DetallePlatoRequestDTO::getCantidad).collect(Collectors.toList());
-
-       this.adapterPizza = new DetalleAdapter(this,
-                this.platos.stream().map(DetallePlatoRequestDTO::getPlato).collect(Collectors.toList()),
-                this.platos.stream().map(DetallePlatoRequestDTO::getCantidad).collect(Collectors.toList()));
-       this.adapterBebida = new DetalleBebidaAdapter(this,
-               this.bebidas.stream().map(DetalleBebidaRequestDTO::getBebida).collect(Collectors.toList()),
-               this.bebidas.stream().map(DetalleBebidaRequestDTO::getCantidad).collect(Collectors.toList()));
+       if(!platos.isEmpty()) {
+           this.adapterPizza = new DetalleAdapter(this,
+                   this.platos.stream().map(DetallePlatoRequestDTO::getPlato).collect(Collectors.toList()),
+                   this.platos.stream().map(DetallePlatoRequestDTO::getCantidad).collect(Collectors.toList()));
+       }
+       if(!bebidas.isEmpty()) {
+           this.adapterBebida = new DetalleBebidaAdapter(this,
+                   this.bebidas.stream().map(DetalleBebidaRequestDTO::getBebida).collect(Collectors.toList()),
+                   this.bebidas.stream().map(DetalleBebidaRequestDTO::getCantidad).collect(Collectors.toList()));
+       }
 
 
-
+         this.btnOrdenar.setOnClickListener(this);
          this.ListViewPizza.setAdapter(this.adapterPizza);
          this.ListViewBebida.setAdapter(this.adapterBebida);
 
@@ -126,7 +130,17 @@ public class OrdenActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
+        SharedPreferences memoriaPlato = getSharedPreferences("DetallePlato",MODE_PRIVATE);
+        SharedPreferences.Editor editorPlato = memoriaPlato.edit();
+        editorPlato.remove("detallePlatoMemory");
+        editorPlato.apply();
 
+        SharedPreferences memoriaBebida = getSharedPreferences("DetalleBebida",MODE_PRIVATE);
+        SharedPreferences.Editor editorBebida = memoriaBebida.edit();
+        editorBebida.remove("detalleBebidaMemory");
+        editorBebida.apply();
+
+        startActivity(this.panelCarta);
     }
 
     @Override

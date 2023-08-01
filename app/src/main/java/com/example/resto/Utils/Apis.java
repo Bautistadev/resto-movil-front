@@ -4,17 +4,17 @@ import com.example.resto.Service.*;
 
 public class Apis {
     //CREAMOS URLS
-    public static final String urlMarca = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Marca/";
-    public static final String urlPersona = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Cliente/";
+    public static final String urlMarca = "http://192.168.79.10:8080/resto-0.0.1-SNAPSHOT/api/v1/Marca/";
+    public static final String urlPersona = "http://192.168.79.10:8080/resto-0.0.1-SNAPSHOT/api/v1/Cliente/";
 
-    public static final String urlEmpleado = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Empleado/";
-    public static final String urlLogin = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/security/";
-    public static final String urlPlato = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Plato/";
-    public static final String urlPlatoDetalle = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/DetallePlatoController/";
-    public static final String urlBebidaDetalle = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/DetalleBebidaController/";
-    public static final String urlGeolocalizacion = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Geolocalizacion/";
-    public static final String urlMesa = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Mesa/";
-    public static final String urlOcupacion = "http://192.168.0.146:8080/resto-0.0.1-SNAPSHOT/api/v1/Ocupacion/";
+    public static final String urlEmpleado = "http://192.168.79.10:8080/resto-0.0.1-SNAPSHOT/api/v1/Empleado/";
+    public static final String urlLogin = "http://192.168.79.10:8080/resto-0.0.1-SNAPSHOT/security/";
+    public static final String urlPlato = "http://192.168.79.10:8080/resto-0.0.1-SNAPSHOT/api/v1/Plato/";
+    public static final String urlPlatoDetalle = "http://192.168.79.10:8080/resto-0.0.1-SNAPSHOT/api/v1/DetallePlatoController/";
+    public static final String urlBebidaDetalle = "http://192.168.79.10:8080/resto-0.0.1-SNAPSHOT/api/v1/DetalleBebidaController/";
+    public static final String urlGeolocalizacion = "http://192.168.79.10:8080/resto-0.0.1-SNAPSHOT/api/v1/Geolocalizacion/";
+    public static final String urlMesa = "http://192.168.79.10:8080/resto-0.0.1-SNAPSHOT/api/v1/Mesa/";
+    public static final String urlOcupacion = "http://192.168.79.10:8080/resto-0.0.1-SNAPSHOT/api/v1/Ocupacion/";
 
     //ACCEDIMOS A LA URL QUE REPRESENTA A UN SERVICIO WEB
     public static MarcaService getMarcaService(){

@@ -62,8 +62,14 @@ public class DetalleBebidaAdapter extends BaseAdapter {
         this.lblNombre.setText(listaBebida.get(i).getNombre());
         this.lblPrecio.setText("$"+listaBebida.get(i).getPrecio().toString());
         this.lblCantidad.setText(listaCantidad.get(i).toString());
-
-        imageViewPizza.setImageResource(R.mipmap.oibre_image_foreground);
+        if(listaBebida.get(i).getId() == 1)
+            imageViewPizza.setImageResource(R.mipmap.bebida1_round);
+        else if (listaBebida.get(i).getId() == 2) {
+            imageViewPizza.setImageResource(R.mipmap.bebida2_round);
+        }else if (listaBebida.get(i).getId() ==3) {
+            imageViewPizza.setImageResource(R.mipmap.bebida3_round);
+        }else
+            imageViewPizza.setImageResource(R.mipmap.oibre_image_foreground);
 
 
         return view;
